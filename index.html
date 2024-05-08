@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard</title>
+    <!-- Include Plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- Dashboard Layout -->
+    <div id="cosr-plot"></div>
+    <div id="cov-plot"></div>
+
+    <!-- JavaScript to fetch data and update plots -->
+    <script>
+        // Function to fetch CoSR data and update plot
+        function updateCosrPlot() {
+            fetch('/cosr_data')
+            .then(response => response.json())
+            .then(data => {
+                // Create Matplotlib-like bar plot using Plotly
+                var cosrData = [{
+                    x: data.x,
+                    y: data.y,
+                    type: 'bar',
+                    marker: {color: 'skyblue'}
+                }];
+                var layout = {
+                    title: 'CoSR Plot',
+                    xaxis: {title: 'Salesman ID'},
+                    yaxis: {title: 'CoSR'},
+                    barmode: 'group'
+                };
+                Plotly.newPlot('cosr-plot', cosrData, layout);
+            });
+        }
+
+        // Function to fetch CoV data and update plot
+        function updateCovPlot() {
+            fetch('/cov_data')
+            .then(response => response.text())
+            .then(data => {
+                // Update CoV plot with Plotly div
+                document.getElementById('cov-plot').innerHTML = data;
+            });
+        }
+
+        // Call functions to update plots on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCosrPlot();
+            updateCovPlot();
+        });
+    </script>
+</body>
+</html>
